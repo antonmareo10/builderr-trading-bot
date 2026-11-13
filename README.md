@@ -207,6 +207,8 @@ P(> 3 %) stays between 28.8 % and 32.0 %, the worst window drawdown between 16.4
 
 ## License
 
-The template files are © 2026 builderr under the MIT License (`LICENSE`), kept
-unchanged. The agent and research code in this repository are released under the
-same MIT terms. This is a paper-trading competition entry, not investment advice.
+The template files listed above are © 2026 builderr under the MIT License
+(`LICENSE`), kept unchanged. `agent.py`, `research/` and `tests/` are © 2026 Antón
+González, all rights reserved; Builderr may run, reproduce and audit them for the
+challenge and share them under the published prize terms. This is a paper-trading
+competition entry, not investment advice.
