@@ -9,9 +9,10 @@ far enough to reach the podium, so this agent deliberately runs a HIGH-VARIANCE
 book. It is boxed in by hard rules so that it cannot breach a competition limit
 or blow up:
 
-1. Select   - rank every plain (1x) ticker we are given by a momentum blend and
-              keep only names in their own up-trend that are at least about as
-              volatile as the market index. Hold the top 4, equal weight.
+1. Select   - rank every plain (1x) ticker we are given by a momentum blend
+              (3-month return, 1-month return, gap above the 50-day mean); keep
+              names with a positive score that are at least about as volatile
+              as the market index. Hold the top 4, equal weight.
 2. Size     - scale the basket so its estimated daily volatility is ~3.0% in a
               calm market up-trend and ~2.5% otherwise; never more than 97%
               invested and never more than 24% in one name.
@@ -164,6 +165,7 @@ def _in_uptrend(c: list[float]) -> bool:
     return fast is not None and slow is not None and c[-1] > fast and c[-1] > slow
 
 
+
 # ----------------------------------------------------------------------------
 # portfolio helpers
 # ----------------------------------------------------------------------------
@@ -252,7 +254,7 @@ def target_weights(fresh: dict[str, tuple[list[str], list[float]]], held: dict[s
     # Rank plain (1x) names.
     scored: list[tuple[float, str]] = []
     for t, (_, c) in fresh.items():
-        if t in BETA_MULTIPLE or len(c) < MIN_HISTORY or not _in_uptrend(c):
+        if t in BETA_MULTIPLE or len(c) < MIN_HISTORY:
             continue
         s = _momentum_score(c)
         if s is None or s <= 0:

@@ -40,7 +40,8 @@ def load_module(path: Path, overrides: dict[str, float]):
     for k, v in overrides.items():
         if not hasattr(mod, k):
             raise SystemExit(f"unknown parameter {k}")
-        setattr(mod, k, type(getattr(mod, k))(v))
+        cur = getattr(mod, k)
+        setattr(mod, k, v if isinstance(cur, str) else type(cur)(v))
     return mod
 
 
