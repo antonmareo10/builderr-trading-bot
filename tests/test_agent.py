@@ -171,6 +171,14 @@ class LimitTests(unittest.TestCase):
         self.assertNotIn("NVDA", {o["ticker"] for o in orders})
         self.assertTrue(orders)
 
+    def test_glitched_future_bar_does_not_freeze_the_book(self):
+        a, m = fresh_agent(), bull_market()
+        bad = dict(m["XLU"][-1]); bad["ts"] = "2099-01-01"
+        m["XLU"] = m["XLU"] + [bad]
+        orders = a.decide(m, portfolio(100_000.0), 100_000.0)
+        self.assertTrue(any(o["side"] == "buy" for o in orders))
+        self.assertNotIn("XLU", {o["ticker"] for o in orders})
+
     def test_held_ticker_missing_from_feed_is_left_alone(self):
         a, m = fresh_agent(), bull_market()
         held = {"GONE": 100.0}

@@ -386,7 +386,12 @@ def _decide(market_state: dict, portfolio_state: dict, cash: float) -> list[dict
     series = {t: s for t, s in series.items() if s[1]}
     if not series:
         return []
-    latest = max(s[0][-1] for s in series.values())
+    # The session date is the last bar date most tickers agree on (a lagging or
+    # glitched ticker cannot move it); tickers not on that date are not traded.
+    counts: dict[str, int] = {}
+    for d, _ in series.values():
+        counts[d[-1]] = counts.get(d[-1], 0) + 1
+    latest = max(counts, key=lambda d: (counts[d], d))
     tradable = {t for t, s in series.items() if s[0][-1] == latest}
 
     held = _holdings(portfolio_state)
